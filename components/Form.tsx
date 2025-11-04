@@ -5,27 +5,34 @@ import FormButton from './FormButton';
 import FormContent from './FormContent';
 import FormHeader from './FormHeader';
 import { StyleSheet, View } from 'react-native';
-import { useMMKVNumber } from 'react-native-mmkv';
+import { useFormState } from '../hooks/useFormState';
 
-const Form: React.FC<FormProps> = ({
-
-}) => {
-    const [currentStep, setCurrentStep] = useMMKVNumber("currentStep");
+const Form: React.FC<FormProps> = () => {
+    const {
+        currentStep,
+        setCurrentStep,
+        isFormInvalid,
+        onFormButtonClick,
+        onBackButtonClick
+    } = useFormState();
     React.useEffect(() => {
-        setCurrentStep(2);
+        if (!currentStep) {
+            setCurrentStep(1);
+        }
     }, []);
     return (
         <View style={styles.container}>
-            <AppHeader />
-            <FormHeader totalSteps={5} currentStep={Number(currentStep)} />
-            <FormContent />
-            <FormButton buttonLabel="Submit" loading={false} onPress={() => { } } />
+            <AppHeader onBack={onBackButtonClick}/>
+            <FormHeader currentStep={currentStep ?? 0} />
+            <FormContent currentStep={currentStep ?? 0}/>
+            <FormButton buttonLabel="Submit" loading={false} onPress={onFormButtonClick} disabled={isFormInvalid} />
         </View>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: '#F5F5F5',
         display: 'flex',
         height: '100%',

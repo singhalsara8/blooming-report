@@ -17,7 +17,7 @@ const FormButton: React.FC<FormButtonProps> = ({
     const isDisabled = disabled || loading;
 
     return (
-        <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer} pointerEvents="box-none">
             <TouchableOpacity
                 onPress={isDisabled ? undefined : onPress}
                 disabled={isDisabled}
@@ -42,12 +42,12 @@ const FormButton: React.FC<FormButtonProps> = ({
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 1,
         width: '100%',
-        padding: 24,
+        padding: 16,
+        left: 0,
+        right: 0,
         bottom: 0,
         position: 'absolute',
         backgroundColor: '#F5F5F5',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     buttonLabel: {
         color: '#FFFFFF',
         fontSize: 14,
-        fontWeight: '600',
+        fontWeight: 600,
         fontFamily: 'Open Sans',
         lineHeight: 24,
         letterSpacing: -1,

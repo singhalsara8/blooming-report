@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { View, Text, TouchableOpacity, StyleSheet, Image, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { FormHeaderProps, formLabels } from '../const/FormHeader.types';
+import { FORM_TOTAL_PAGES } from '../const/Form.types';
 
-const FormHeader: React.FC<FormHeaderProps> = ({ totalSteps, currentStep }) => {
-
+const FormHeader: React.FC<FormHeaderProps> = ({ currentStep }) => {
     const renderStep = (index: number) => {
         const stepNumber = index + 1;
         const isActive = stepNumber === currentStep;
@@ -25,7 +25,7 @@ const FormHeader: React.FC<FormHeaderProps> = ({ totalSteps, currentStep }) => {
                 </Text>
             </View>
 
-            {stepNumber < totalSteps && (
+            {stepNumber < FORM_TOTAL_PAGES && (
                 <View
                     style={[
                         styles.connector,
@@ -40,8 +40,8 @@ const FormHeader: React.FC<FormHeaderProps> = ({ totalSteps, currentStep }) => {
     return (
         <View style={styles.container}>
             <View style={styles.topRow}>
-                <View style={styles.indicatorContainer} accessibilityRole="progressbar" accessibilityValue={{ now: currentStep, min: 1, max: totalSteps }}>
-                    <View style={styles.stepsRow}> {Array.from({ length: totalSteps }).map((_, i) => renderStep(i))} </View>
+                <View style={styles.indicatorContainer} accessibilityRole="progressbar" accessibilityValue={{ now: currentStep, min: 1, max: FORM_TOTAL_PAGES }}>
+                    <View style={styles.stepsRow}> {Array.from({ length: FORM_TOTAL_PAGES }).map((_, i) => renderStep(i))} </View>
                 </View>
             </View>
 

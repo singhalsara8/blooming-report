@@ -5,5 +5,5 @@ export interface FarmerDetails {
 }
 
 export type FormContentProps = {
-
+    currentStep: number;
 };

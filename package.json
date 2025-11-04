@@ -10,9 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^11.4.1",
+    "@react-native-picker/picker": "^2.11.4",
     "@react-native/new-app-screen": "0.82.1",
     "react": "19.1.1",
     "react-native": "0.82.1",
+    "react-native-maps": "^1.26.18",
     "react-native-mmkv": "^4.0.0",
     "react-native-nitro-modules": "^0.31.4",
     "react-native-safe-area-context": "^5.5.2"

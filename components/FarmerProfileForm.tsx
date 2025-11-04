@@ -1,47 +1,40 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
-import { useMMKVBoolean, useMMKVString } from 'react-native-mmkv';
-import { FULL_NAME_KEY, NAME_ERROR_KEY, CONTACT_NUMBER_KEY, CONTACT_ERROR_KEY, FarmerProfileFormProps } from '../const/FarmerProfileForm.types';
+import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { CONTACT_NUMBER_KEY, FarmerProfileFormProps, FULL_NAME_KEY, genderOptions, GENDER_KEY, stateOptions, STATE_KEY, villageOptions, VILLAGE_KEY, BLOCK_KEY, STREET_KEY, PLOT_KEY } from '../const/FarmerProfileForm.types';
+import { Picker } from '@react-native-picker/picker';
+import { useFormState } from '../hooks/useFormState';
 
 const FarmerProfileForm: React.FC<FarmerProfileFormProps> = ({
-    isContentInvalid = false,
-    setIsContentInvalid
+
 }) => {
-    const [fullName, setFullName] = useMMKVString(FULL_NAME_KEY);
-    const [nameError, setNameError] = useMMKVBoolean(NAME_ERROR_KEY);
+    const {
+        handleFarmerProfileChange,
+        fullName,
+        showNameError,
+        contactNumber,
+        showContactError,
+        gender,
+        showGenderError,
+        state,
+        village,
+        block,
+        street,
+        plot
+    } = useFormState();
 
-    const [contactNumber, setContactNumber] = useMMKVString(CONTACT_NUMBER_KEY);
-    const [contactError, setContactError] = useMMKVBoolean(CONTACT_ERROR_KEY);
-
-    const handleChange = React.useCallback((field: string, newValue: string) => {
-        const trimmedValue = newValue.trim();
-        switch (field) {
-            case FULL_NAME_KEY:
-                setFullName(trimmedValue);
-                const isNameInvalid = trimmedValue === "";
-                setNameError(isNameInvalid);
-                setIsContentInvalid(isContentInvalid || isNameInvalid);
-                break;
-            case CONTACT_NUMBER_KEY:
-                setContactNumber(trimmedValue);
-                const tenDigitRegex: RegExp = /^\d{10}$/;
-                const isNumberInvalid = tenDigitRegex.test(trimmedValue);
-                setContactError(isNumberInvalid);
-                setIsContentInvalid(isContentInvalid || isNumberInvalid);
-                break;
-        }
-    }, [isContentInvalid]);
     return (
-        <ScrollView>
+        <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 120 }} >
             <View style={styles.container}>
                 <Text style={styles.label}>1. Enter full name*</Text>
                 <TextInput
                     placeholder="Enter name"
                     value={fullName}
-                    onChangeText={(text: string) => handleChange(FULL_NAME_KEY, text)}
+                    onChangeText={(text: string) => handleFarmerProfileChange(FULL_NAME_KEY, text)}
                     style={[styles.textInput]}
                 />
-                {nameError && <Text style={styles.errorText}>Please enter a valid name.</Text>}
+                {showNameError && <Text style={styles.errorText}>Please enter a valid name.</Text>}
             </View>
 
             <View style={styles.container}>
@@ -49,12 +42,108 @@ const FarmerProfileForm: React.FC<FarmerProfileFormProps> = ({
                 <TextInput
                     placeholder="Enter mobile number"
                     value={contactNumber}
-                    onChangeText={(text) => handleChange(CONTACT_NUMBER_KEY, text)}
+                    onChangeText={(text) => handleFarmerProfileChange(CONTACT_NUMBER_KEY, text)}
                     keyboardType="numeric"
                     maxLength={10}
                     style={styles.textInput}
                 />
-                {contactError && <Text style={styles.errorText}>Please enter a valid contact number.</Text>}
+                {showContactError && <Text style={styles.errorText}>Please enter a valid contact number.</Text>}
+            </View>
+
+            <View style={styles.container}>
+                <Text style={styles.label}>3. Select Gender*</Text>
+                {genderOptions.map((option) => {
+                    const selected = option.value === gender;
+                    return (
+                        <TouchableOpacity
+                            key={option.value}
+                            onPress={() => handleFarmerProfileChange(GENDER_KEY, option.value)}
+                            activeOpacity={0.7}
+                            style={styles.optionRow}
+                        >
+                            <View style={[styles.radioOuter, selected && styles.radioOuterSelected]}>
+                                {selected && <View style={styles.radioInner} />}
+                            </View>
+
+                            <Text style={styles.optionLabel}>{option.label}</Text>
+                        </TouchableOpacity>
+                    );
+                })}
+                {showGenderError && <Text style={styles.errorText}>Please select a gender.</Text>}
+            </View>
+
+            <View style={styles.container}>
+                <Text style={styles.label}>4. Location</Text>
+
+                <Text style={[styles.label, styles.subLabel]}>Select State</Text>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={state}
+                        onValueChange={(value) => handleFarmerProfileChange(STATE_KEY, value)}
+                        mode="dropdown"
+                        style={styles.picker}
+                        itemStyle={styles.pickerItem}
+                    >
+                        {stateOptions.map((opt, index) => (
+                            index > 0 && (
+                                <Picker.Item
+                                    key={index}
+                                    label={opt.label}
+                                    value={opt.value}
+                                    style={styles.pickerValue}
+                                />
+                            )
+                        ))}
+                    </Picker>
+                </View>
+
+                <Text style={[styles.label, styles.subLabel]}>Select Village</Text>
+                <View style={styles.pickerContainer}>
+                    <Picker
+                        selectedValue={village}
+                        onValueChange={(value) => handleFarmerProfileChange(VILLAGE_KEY, value)}
+                        mode="dropdown"
+                        style={styles.picker}
+                        itemStyle={styles.pickerItem}
+                    >
+                        {villageOptions.map((opt, index) => (
+                            index > 0 && (
+                                <Picker.Item
+                                    key={index}
+                                    label={opt.label}
+                                    value={opt.value}
+                                    style={styles.pickerValue}
+                                />
+                            )
+                        ))}
+                    </Picker>
+                </View>
+
+                <Text style={[styles.label, styles.subLabel]}>Enter Block name</Text>
+                <TextInput
+                    placeholder="Enter block name"
+                    value={block}
+                    onChangeText={(value) => handleFarmerProfileChange(BLOCK_KEY, value)}
+                    style={styles.textInput}
+                />
+
+                <Text style={[styles.label, styles.subLabel]}>Enter Street name/number</Text>
+                <TextInput
+                    placeholder="Enter street name/number"
+                    value={street}
+                    onChangeText={(value) => handleFarmerProfileChange(STREET_KEY, value)}
+                    keyboardType="numeric"
+                    maxLength={6}
+                    style={styles.textInput}
+                />
+
+                <Text style={[styles.label, styles.subLabel]}>Enter Plot Number</Text>
+                <TextInput
+                    placeholder="03/03/2025"
+                    value={plot}
+                    onChangeText={(value) => handleFarmerProfileChange(PLOT_KEY, value)}
+                    style={styles.textInput}
+                />
             </View>
         </ScrollView>
     );
@@ -87,6 +176,59 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 18,
         marginBottom: 6
+    },
+    subLabel: {
+        marginTop: 18,
+    },
+    optionRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 8,
+    },
+    radioOuter: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: '#CBCBCB',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    radioOuterSelected: {
+        borderColor: '#D4391A',
+    },
+    radioInner: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: '#D4391A',
+    },
+    optionLabel: {
+        marginLeft: 12,
+        color: '#262626',
+        fontFamily: 'OpenSans-Regular',
+        fontSize: 16,
+    },
+    pickerContainer: {
+        marginTop: 6,
+        borderWidth: 0.5,
+        borderColor: '#CBCBCB',
+        borderRadius: 6,
+        overflow: 'visible',
+        backgroundColor: '#FFFFFF',
+    },
+    picker: {
+        width: '100%',
+    },
+    pickerItem: {
+        fontSize: 14,
+    },
+    pickerValue: {
+        fontFamily: 'OpenSans-Regular',
+        fontWeight: '400',
+        fontSize: 14,
+        lineHeight: 18,
+        letterSpacing: 0
     },
     errorText: {
         marginTop: 10,
