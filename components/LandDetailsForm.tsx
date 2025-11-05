@@ -4,9 +4,10 @@ import {
     View,
     Text,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    TextInput
 } from 'react-native';
-import { LandUnitDetails, LandHoldingOptions, AREA_UNIT_KEY, LAND_HOLDING_KEY } from '../const/LandDetailsForm.types';
+import { LandUnitDetails, LandHoldingOptions, AREA_UNIT_KEY, AREA_OF_PLANTATION_KEY, LAND_HOLDING_KEY } from '../const/LandDetailsForm.types';
 import { Picker } from '@react-native-picker/picker';
 import { useFormState } from '../hooks/useFormState';
 
@@ -15,9 +16,13 @@ const LandDetailsForm: React.FC = () => {
         handleLandDetailsChange,
         areaUnit,
         showAreaUnitError,
+        areaOfPlantation,
+        showAreaOfPlantationError,
         landHolding,
     } = useFormState();
     const [plantationArea, setPlantationArea] = React.useState<string>('');
+
+    const unitLabel = !areaUnit || areaUnit === "" ? "unit" : areaUnit;
 
     return (
         <ScrollView
@@ -25,7 +30,7 @@ const LandDetailsForm: React.FC = () => {
             contentContainerStyle={{ paddingBottom: 120 }} >
 
             <View style={styles.container}>
-                <Text style={styles.label}>Select unit for Area*</Text>
+                <Text style={styles.label}>1. Select unit for Area*</Text>
                 <View style={styles.pickerContainer}>
                     <Picker
                         selectedValue={areaUnit ?? ""}
@@ -48,33 +53,25 @@ const LandDetailsForm: React.FC = () => {
                 {showAreaUnitError && <Text style={styles.errorText}>Please select a unit for area.</Text>}
             </View>
 
-            {/* 
-            <View>
-                <Text style={styles.label}>Area of plantation*</Text> */}
-            {/* <TextInput
-                    placeholder="Enter area of Plantation" */}
-            {/* //     value={fullName}
-                //     onChangeText={(text: string) => handleFarmerProfileChange(FULL_NAME_KEY, text)}
-                //     style={[styles.textInput]}
-                 /> */}
-            {/* // {showNameError && <Text style={styles.errorText}>Please enter a valid name.</Text>} */}
-            {/* <View style={styles.pickerContainer}>
-                    <Picker
-                        selectedValue={plantationArea}
-                        onValueChange={(v) => setPlantationArea(String(v))}
-                        mode="dropdown"
-                        style={styles.picker}
-                        itemStyle={styles.pickerItem}
-                    >
-                        {plantationAreaOptions.map((o) => (
-                            <Picker.Item key={o.value} label={o.label} value={o.value} />
-                        ))}
-                    </Picker>
-                </View> */}
-            {/* </View> */}
+            <View style={styles.container}>
+                <Text style={styles.label}>2. Area of Plantation*</Text>
+                <View style={styles.subContainer}>
+                    <TextInput
+                        placeholder="Enter area of plantation"
+                        value={areaOfPlantation}
+                        onChangeText={(text) => handleLandDetailsChange(AREA_OF_PLANTATION_KEY, text)}
+                        keyboardType="numeric"
+                        style={styles.textInput}
+                    />
+                    <View style={styles.unitContainer}>
+                        <Text>{unitLabel}</Text>
+                    </View>
+                </View>
+                {showAreaOfPlantationError && <Text style={styles.errorText}>Please enter a valid area of plantation.</Text>}
+            </View>
 
             <View style={styles.container}>
-                <Text style={[styles.label, { marginTop: 12 }]}>Land Holding</Text>
+                <Text style={[styles.label, { marginTop: 12 }]}>3. Land Holding</Text>
                 {LandHoldingOptions.map((option) => {
                     const selected = option.value === landHolding
                     return (
@@ -110,6 +107,29 @@ const styles = StyleSheet.create({
         borderColor: '#CBCBCB',
         borderWidth: 0.5,
     },
+    subContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 6,
+        borderColor: '#CBCBCB',
+        borderRadius: 6,
+        borderWidth: 0.5,
+    },
+    unitContainer: {
+        borderRadius: 6,
+        borderColor: '#CBCBCB',
+        borderWidth: 0.5,
+        paddingHorizontal: 9,
+        backgroundColor: '#F5F5F5',
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
+    textInput: {
+        paddingVertical: 19,
+        paddingHorizontal: 16,
+        backgroundColor: '#FFFFFF',
+        flex: 1,
+    },
     label: {
         color: '#262626',
         letterSpacing: 0,
@@ -118,6 +138,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 18,
         marginBottom: 6
+    },
+    unitLabel: {
+        fontFamily: 'OpenSans-SemiBold',
+        fontWeight: '600',
+        fontSize: 14,
+        lineHeight: 18,
+        letterSpacing: 0,
+        color: '#262626',
     },
 
     /* picker */

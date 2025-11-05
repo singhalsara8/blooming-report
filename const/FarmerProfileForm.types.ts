@@ -35,14 +35,12 @@ export const genderOptions = [
 
 export const STATE_KEY = "farmerState";
 export const stateOptions = [
-    { label: 'Select from list', value: '' },
     { label: 'State A', value: 'state_a' },
     { label: 'State B', value: 'state_b' },
 ];
 
 export const VILLAGE_KEY = "farmerVillage";
 export const villageOptions = [
-    { label: 'Select from list', value: '' },
     { label: 'Village X', value: 'village_x' },
     { label: 'Village Y', value: 'village_y' },
 ];

@@ -6,15 +6,16 @@ import {
     ActivityIndicator,
     View,
 } from 'react-native';
-import { FormButtonProps } from '../const/FormButton.types';
+import { buttonLabels, FormButtonProps } from '../const/FormButton.types';
 
 const FormButton: React.FC<FormButtonProps> = ({
-    buttonLabel,
+    currentStep,
     onPress,
     disabled = false,
     loading = false,
 }) => {
     const isDisabled = disabled || loading;
+
 
     return (
         <View style={styles.buttonContainer} pointerEvents="box-none">
@@ -24,14 +25,14 @@ const FormButton: React.FC<FormButtonProps> = ({
                 style={[styles.button, isDisabled && styles.buttonDisabled]}
                 accessibilityRole="button"
                 accessibilityState={{ disabled: isDisabled }}
-                accessibilityLabel={buttonLabel}
+                accessibilityLabel={buttonLabels[currentStep - 1]}
             >
                 <View style={styles.content}>
                     {loading ? (
                         <ActivityIndicator color="#fff" />
                     ) : (
                         <Text style={styles.buttonLabel}>
-                            {buttonLabel}
+                            {buttonLabels[currentStep - 1]}
                         </Text>
                     )}
                 </View>

@@ -84,15 +84,19 @@ const FarmerProfileForm: React.FC<FarmerProfileFormProps> = ({
                         style={styles.picker}
                         itemStyle={styles.pickerItem}
                     >
+                        <Picker.Item
+                            label="Select state..."
+                            value=""
+                            enabled={false}
+                            color="#999"
+                        />
                         {stateOptions.map((opt, index) => (
-                            index > 0 && (
-                                <Picker.Item
-                                    key={index}
-                                    label={opt.label}
-                                    value={opt.value}
-                                    style={styles.pickerValue}
-                                />
-                            )
+                            <Picker.Item
+                                key={index}
+                                label={opt.label}
+                                value={opt.value}
+                                style={styles.pickerValue}
+                            />
                         ))}
                     </Picker>
                 </View>
@@ -106,15 +110,19 @@ const FarmerProfileForm: React.FC<FarmerProfileFormProps> = ({
                         style={styles.picker}
                         itemStyle={styles.pickerItem}
                     >
+                        <Picker.Item
+                            label="Select village..."
+                            value=""
+                            enabled={false}
+                            color="#999"
+                        />
                         {villageOptions.map((opt, index) => (
-                            index > 0 && (
-                                <Picker.Item
-                                    key={index}
-                                    label={opt.label}
-                                    value={opt.value}
-                                    style={styles.pickerValue}
-                                />
-                            )
+                            <Picker.Item
+                                key={index}
+                                label={opt.label}
+                                value={opt.value}
+                                style={styles.pickerValue}
+                            />
                         ))}
                     </Picker>
                 </View>

@@ -10,12 +10,15 @@ import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
 import Form from './components/Form';
+import { RealmProvider } from '@realm/react';
 
 function App() {
 
   return (
     <SafeAreaProvider>
+      <RealmProvider>
       <Form />
+      </RealmProvider>
     </SafeAreaProvider>
   );
 }

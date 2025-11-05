@@ -25,7 +25,7 @@ const Form: React.FC<FormProps> = () => {
             <AppHeader onBack={onBackButtonClick}/>
             <FormHeader currentStep={currentStep ?? 0} />
             <FormContent currentStep={currentStep ?? 0}/>
-            <FormButton buttonLabel="Submit" loading={false} onPress={onFormButtonClick} disabled={isFormInvalid} />
+            <FormButton currentStep={currentStep ?? 0} loading={false} onPress={onFormButtonClick} disabled={isFormInvalid} />
         </View>
     )
 };
