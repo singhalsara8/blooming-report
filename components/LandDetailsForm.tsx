@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import {
     StyleSheet,
     View,
@@ -6,13 +6,18 @@ import {
     TouchableOpacity,
     ScrollView
 } from 'react-native';
-import { LandUnitDetails, LandHoldingOptions } from '../const/LandDetailsForm.types';
+import { LandUnitDetails, LandHoldingOptions, AREA_UNIT_KEY, LAND_HOLDING_KEY } from '../const/LandDetailsForm.types';
 import { Picker } from '@react-native-picker/picker';
+import { useFormState } from '../hooks/useFormState';
 
 const LandDetailsForm: React.FC = () => {
-    const [areaUnit, setAreaUnit] = React.useState<string>('sq_m');
+    const {
+        handleLandDetailsChange,
+        areaUnit,
+        showAreaUnitError,
+        landHolding,
+    } = useFormState();
     const [plantationArea, setPlantationArea] = React.useState<string>('');
-    const [landHolding, setLandHolding] = React.useState<string | null>(null);
 
     return (
         <ScrollView
@@ -23,17 +28,24 @@ const LandDetailsForm: React.FC = () => {
                 <Text style={styles.label}>Select unit for Area*</Text>
                 <View style={styles.pickerContainer}>
                     <Picker
-                        selectedValue={areaUnit}
-                        onValueChange={(v) => setAreaUnit(String(v))}
+                        selectedValue={areaUnit ?? ""}
+                        onValueChange={(v) => handleLandDetailsChange(AREA_UNIT_KEY, String(v))}
                         mode="dropdown"
                         style={styles.picker}
                         itemStyle={styles.pickerItem}
                     >
+                        <Picker.Item
+                            label="Select unit..."
+                            value=""
+                            enabled={false}
+                            color="#999"
+                        />
                         {LandUnitDetails.map((value, index) => (
                             <Picker.Item key={index} label={value} value={value} style={styles.pickerValue} />
                         ))}
                     </Picker>
                 </View>
+                {showAreaUnitError && <Text style={styles.errorText}>Please select a unit for area.</Text>}
             </View>
 
             {/* 
@@ -68,7 +80,7 @@ const LandDetailsForm: React.FC = () => {
                     return (
                         <TouchableOpacity
                             key={option.value}
-                            onPress={() => setLandHolding(option.value)}
+                            onPress={() => handleLandDetailsChange(LAND_HOLDING_KEY, option.value)}
                             activeOpacity={0.7}
                             style={styles.optionRow}
                         >
@@ -161,6 +173,11 @@ const styles = StyleSheet.create({
         color: TEXT,
         fontFamily: 'OpenSans-Regular',
         fontSize: 16,
+    },
+    errorText: {
+        marginTop: 10,
+        color: '#ff6961',
+        backgroundColor: 'transparent'
     },
 });
 

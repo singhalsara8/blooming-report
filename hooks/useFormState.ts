@@ -20,6 +20,7 @@ import {
     PLOT_KEY
 } from '../const/FarmerProfileForm.types';
 import { FORM_CURRENT_STEP_KEY, FORM_INVALID_KEY, FORM_TOTAL_PAGES } from '../const/Form.types';
+import { AREA_UNIT_ERROR_KEY, AREA_UNIT_KEY, AREA_UNIT_MODIFIED_KEY, LAND_HOLDING_KEY } from '../const/LandDetailsForm.types';
 
 export const useFormState = () => {
     const [currentStep, setCurrentStep] = useMMKVNumber(FORM_CURRENT_STEP_KEY);
@@ -101,8 +102,29 @@ export const useFormState = () => {
 
     
     // Page - 2: Land Details
-    
-    
+    const [areaUnit, setAreaUnit] = useMMKVString(AREA_UNIT_KEY);
+    const [isAreaUnitModified, setIsAreaUnitModified] = useMMKVBoolean(AREA_UNIT_MODIFIED_KEY);
+    const [areaUnitError, setAreaUnitError] = useMMKVBoolean(AREA_UNIT_ERROR_KEY);
+    const [showAreaUnitError, setShowAreaUnitError] = useMMKVBoolean(AREA_UNIT_ERROR_KEY);
+    React.useEffect(() => {
+        setShowAreaUnitError(isAreaUnitModified && (!areaUnit || areaUnit === ""));
+        setAreaUnitError((!areaUnit || areaUnit === "") && currentStep === 2);
+    }, [areaUnit, setShowAreaUnitError, isAreaUnitModified]);
+
+    const [landHolding, setLandHolding] = useMMKVString(LAND_HOLDING_KEY);
+
+    const handleLandDetailsChange = React.useCallback((field: string, newValue: string) => {
+        switch (field) {
+            case AREA_UNIT_KEY:
+                setIsAreaUnitModified(true);
+                setAreaUnit(newValue);
+                break;
+            case LAND_HOLDING_KEY:
+                setLandHolding(newValue);
+                break;
+        }}, [setIsAreaUnitModified, setAreaUnit, setLandHolding]);
+
+
     // Global state management
     React.useEffect(() => {
         switch (currentStep) {
@@ -111,12 +133,15 @@ export const useFormState = () => {
                 setIsContactModified(false);
                 setIsGenderModified(false);
                 break;
+            case 2:
+                setIsAreaUnitModified(false);
+                break;
         }
     }, [currentStep]);
 
     React.useEffect(() => {
-        setIsFormInvalid(nameError || contactError || genderError);
-    }, [nameError, contactError, genderError, setIsFormInvalid]);
+        setIsFormInvalid(nameError || contactError || genderError || areaUnitError);
+    }, [nameError, contactError, genderError, setIsFormInvalid, areaUnitError]);
 
     const onFormButtonClick = React.useCallback(() => {
         if (currentStep === FORM_TOTAL_PAGES) {
@@ -149,6 +174,12 @@ export const useFormState = () => {
         street,
         plot,
         onFormButtonClick,
-        onBackButtonClick
+        onBackButtonClick,
+        handleLandDetailsChange,
+        areaUnit,
+        setAreaUnit,
+        isAreaUnitModified,
+        showAreaUnitError,
+        landHolding
     }
 }

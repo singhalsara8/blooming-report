@@ -12,5 +12,10 @@ export const LandHoldingOptions = [
     {label: 'Shared (Neighbouring farmers)', value: 'shared'},
 ];
 
+export const AREA_UNIT_KEY = "areaUnit";
+export const AREA_UNIT_MODIFIED_KEY = "isAreaUnitModified";
+export const AREA_UNIT_ERROR_KEY = "areaUnitError";
+export const LAND_HOLDING_KEY = "landHolding";
+
 export interface LandDetailsFormProps { 
 };
