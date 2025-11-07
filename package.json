@@ -20,6 +20,7 @@
     "react-native-mmkv": "^4.0.0",
     "react-native-nitro-modules": "^0.31.4",
     "react-native-safe-area-context": "^5.5.2",
+    "react-native-uuid": "^2.0.3",
     "realm": "^20.2.0"
   },
   "devDependencies": {

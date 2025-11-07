@@ -11,13 +11,15 @@ import {
 } from 'react-native-safe-area-context';
 import Form from './components/Form';
 import { RealmProvider } from '@realm/react';
+import { FarmerProfileSchema } from './db/schemas/FarmerProfileSchema';
+import { LandDetailsSchema } from './db/schemas/LandDetailsSchema';
 
 function App() {
 
   return (
     <SafeAreaProvider>
-      <RealmProvider>
-      <Form />
+      <RealmProvider schema={[FarmerProfileSchema, LandDetailsSchema]} schemaVersion={4} >
+        <Form />
       </RealmProvider>
     </SafeAreaProvider>
   );

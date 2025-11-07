@@ -1,23 +1,30 @@
 import { useMMKVString } from "react-native-mmkv";
-import { getRealm } from "./realmConfig";
+import { Alert } from "react-native";
+import { useRealm } from "@realm/react";
+import { BLOCK_KEY, CONTACT_NUMBER_KEY, FULL_NAME_KEY, GENDER_KEY, PLOT_KEY, STATE_KEY, STREET_KEY, VILLAGE_KEY } from "../const/FarmerProfileForm.types";
+import { AREA_OF_PLANTATION_KEY, AREA_UNIT_KEY, LAND_HOLDING_KEY } from "../const/LandDetailsForm.types";
 
 export const useSaveFarmer = () => {
-    const [fullName] = useMMKVString("fullName");
-    const [contactNumber] = useMMKVString("contactNumber");
-    const [gender] = useMMKVString("gender");
-    const [state] = useMMKVString("state");
-    const [village] = useMMKVString("village");
-    const [block] = useMMKVString("block");
-    const [street] = useMMKVString("street");
-    const [plot] = useMMKVString("plot");
+
+    const realm = useRealm();
+
+    const [fullName] = useMMKVString(FULL_NAME_KEY);
+    const [contactNumber] = useMMKVString(CONTACT_NUMBER_KEY);
+    const [gender] = useMMKVString(GENDER_KEY);
+    const [state] = useMMKVString(STATE_KEY);
+    const [village] = useMMKVString(VILLAGE_KEY);
+    const [block] = useMMKVString(BLOCK_KEY);
+    const [street] = useMMKVString(STREET_KEY);
+    const [plot] = useMMKVString(PLOT_KEY);
+    const [areaUnit] = useMMKVString(AREA_UNIT_KEY);
+    const [areaOfPlantation] = useMMKVString(AREA_OF_PLANTATION_KEY);
+    const [landHolding] = useMMKVString(LAND_HOLDING_KEY);
 
     const saveToRealm = async () => {
         try {
-            const realm = await getRealm();
-
 
             realm.write(() => {
-                realm.create("Farmer", {
+                const farmer = realm.create("FarmerProfile", {
                     fullName,
                     contactNumber,
                     gender,
@@ -26,13 +33,24 @@ export const useSaveFarmer = () => {
                     block,
                     street,
                     plot,
+                    landDetails: {
+                        areaUnit,
+                        areaOfPlantation,
+                        landHolding
+                    }
                 });
             });
-            const allFarmers = realm.objects("Farmer");
-            console.log("📌 Farmers in Realm:", JSON.stringify(allFarmers, null, 2));
+            Alert.alert("Success", "Farmer profile saved successfully!");
         } catch (err) {
+            Alert.alert("Error", "Failed to save farmer profile: ");
         }
+    }
+
+    const printAllFarmers = async () => {
+        const farmers = realm.objects("FarmerProfile");
+        Alert.alert("Realm Data", JSON.stringify(farmers, null, 2));
     };
 
-    return { saveToRealm };
+
+    return { saveToRealm, printAllFarmers };
 };

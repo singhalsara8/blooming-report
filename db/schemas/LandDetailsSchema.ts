@@ -3,6 +3,7 @@ export const LandDetailsSchema = {
   embedded: true,   
   properties: {
     areaUnit: "string",
+    areaOfPlantation: "string",
     landHolding: "string?"
   } as const,
 };

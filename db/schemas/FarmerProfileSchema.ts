@@ -1,10 +1,11 @@
-import { BSON } from "realm"
+import uuid from 'react-native-uuid';
+
 
 export const FarmerProfileSchema = {
   name: 'FarmerProfile',
   primaryKey: 'id',
   properties: {
-    id: {type: 'objectId', default: () => new BSON.ObjectId() },
+    id: {type: 'string', default: () => uuid.v4() },
     fullName: 'string',
     contactNumber: 'string',
     gender: 'string',

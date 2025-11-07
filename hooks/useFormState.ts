@@ -22,6 +22,7 @@ import {
 import { FORM_CURRENT_STEP_KEY, FORM_INVALID_KEY, FORM_TOTAL_PAGES } from '../const/Form.types';
 import { AREA_UNIT_ERROR_KEY, AREA_UNIT_KEY, SHOW_AREA_UNIT_ERROR_KEY, AREA_UNIT_MODIFIED_KEY, LAND_HOLDING_KEY, AREA_OF_PLANTATION_ERROR_KEY, AREA_OF_PLANTATION_KEY, AREA_OF_PLANTATION_MODIFIED_KEY, SHOW_AREA_OF_PLANTATION_ERROR_KEY } from '../const/LandDetailsForm.types';
 import { useSaveFarmer } from '../db/useSaveFarmer';
+import { Alert } from 'react-native';
 
 export const useFormState = () => {
     const [currentStep, setCurrentStep] = useMMKVNumber(FORM_CURRENT_STEP_KEY);
@@ -188,13 +189,13 @@ export const useFormState = () => {
         setCurrentStep(1);
     };
 
-    const { saveToRealm } = useSaveFarmer();
+    const { saveToRealm, printAllFarmers } = useSaveFarmer();
     const onFormButtonClick = React.useCallback(async () => {
         if (currentStep === FORM_TOTAL_PAGES) {
             saveToRealm().then(() => {
-                // Show toast
-                resetForm();
+                //printAllFarmers();
             });
+            resetForm();
         } else {
             setCurrentStep((currentStep ?? 0) + 1);
         }
